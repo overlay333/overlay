@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Kick Stream Overlay</title>
+  <title>Overlay</title>
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
@@ -15,7 +15,7 @@
       padding: 0;
       background: transparent;
       font-family: 'Inter', sans-serif;
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 600;
       color: white;
       overflow: hidden;
@@ -27,17 +27,17 @@
       left: 20px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 18px;
     }
 
     .section {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .material-icons {
-      font-size: 26px;
+      font-size: 28px;
       color: white;
       text-shadow:
         0 0 6px rgba(0, 0, 0, 0.3),
@@ -46,7 +46,7 @@
     }
 
     .info-text {
-      font-size: 20px;
+      font-size: 22px;
       text-shadow:
         0 0 6px rgba(0, 0, 0, 0.3),
         0 0 8px rgba(0, 0, 0, 0.3),
@@ -54,6 +54,7 @@
     }
 
     .emoji-light {
+      font-size: 28px;
       text-shadow:
         0 0 2px rgba(0, 0, 0, 0.2),
         0 0 4px rgba(0, 0, 0, 0.2),
@@ -61,7 +62,7 @@
     }
 
     .icon-k {
-      font-size: 26px;
+      font-size: 28px;
       color: #53FC18;
       font-family: 'Kick', sans-serif;
       text-shadow:
@@ -70,7 +71,7 @@
     }
 
     .small-name {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 600;
       font-family: 'Inter', sans-serif;
       text-shadow:
@@ -85,7 +86,47 @@
       transform: translateX(-50%);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+    }
+
+    .bottom-right-emoji {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .countdown-timer {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      background-color: rgba(255, 0, 0, 0.1);
+      font-size: 20px;
+      font-weight: 600;
+      text-shadow:
+        0 0 4px rgba(0, 0, 0, 0.4),
+        0 0 6px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      transition: background-color 0.5s ease;
+    }
+
+    #countdown-label {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    @keyframes pulseRed {
+      0% { background-color: rgba(255, 0, 0, 0.2); }
+      50% { background-color: rgba(255, 0, 0, 0.6); }
+      100% { background-color: rgba(255, 0, 0, 0.2); }
+    }
+
+    .pulsing {
+      animation: pulseRed 2s infinite;
     }
   </style>
 </head>
@@ -103,10 +144,21 @@
     </div>
   </div>
 
-  <!-- Bottom-center "K lildealy" -->
+  <!-- Bottom-center -->
   <div class="bottom-identity">
     <span class="icon-k">K</span>
     <span class="small-name">lildealy</span>
+  </div>
+
+  <!-- Bottom-right emoji -->
+  <div class="bottom-right-emoji">
+    <span id="temp-emoji" class="emoji-light">🌡️</span>
+  </div>
+
+  <!-- Bottom-left Countdown -->
+  <div id="friday-countdown" class="countdown-timer">
+    <div id="countdown-label">Scavenger Hunt:</div>
+    <span id="countdown-text">Loading...</span>
   </div>
 
   <script>
@@ -123,17 +175,16 @@
 
     async function fetchWeatherInfo() {
       try {
-        const locRes = await fetch('https://ipapi.co/json/');
-        const loc = await locRes.json();
-        const { latitude, longitude } = loc;
+        const latitude = 43.651070;
+        const longitude = -79.347015;
 
         const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`);
         const weather = await weatherRes.json();
 
         const c = weather.current_weather.temperature;
         const f = (c * 9 / 5 + 32).toFixed(1);
-
         const code = weather.current_weather.weathercode;
+
         const weatherMap = {
           0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️",
           51: "🌦️", 53: "🌦️", 55: "🌧️", 56: "🌧️", 57: "🌧️",
@@ -143,22 +194,69 @@
         };
 
         const emoji = weatherMap[code] || "🌡️";
-
         let tempNote = '';
         if (c >= 38) tempNote = ' ☠️';
         else if (c >= 30) tempNote = ' ⚠️';
         else if (c <= 0) tempNote = ' 🧊';
         else if (c <= 5) tempNote = ' ❄️';
 
-        const tempText = `${c}°C / ${f}°F <span class="emoji-light">${emoji}${tempNote}</span>`;
-        document.getElementById('temperature').innerHTML = tempText;
+        document.getElementById('temperature').innerHTML = `${c}°C / ${f}°F`;
+        document.getElementById('temp-emoji').textContent = `${emoji}${tempNote}`;
       } catch (err) {
-        document.getElementById('temperature').innerHTML = '--°C / --°F <span class="emoji-light">🌡️</span>';
+        document.getElementById('temperature').innerHTML = '--°C / --°F';
+        document.getElementById('temp-emoji').textContent = '🌡️';
       }
     }
 
     fetchWeatherInfo();
-    setInterval(fetchWeatherInfo, 600000); // every 10 minutes
+    setInterval(fetchWeatherInfo, 600000);
+
+    function updateFridayCountdown() {
+      const countdownEl = document.getElementById("countdown-text");
+      const container = document.getElementById("friday-countdown");
+
+      const nowUTC = new Date();
+      const nowAustin = new Date(nowUTC.toLocaleString("en-US", { timeZone: "America/Chicago" }));
+      const currentDay = nowAustin.getDay();
+
+      const nextFriday = new Date(nowAustin);
+      const daysUntilFriday = (5 - currentDay + 7) % 7 || 7;
+      nextFriday.setDate(nowAustin.getDate() + daysUntilFriday);
+      nextFriday.setHours(0, 0, 0, 0);
+
+      const diffMs = nextFriday - nowAustin;
+
+      if (diffMs <= 0) {
+        countdownEl.textContent = "TODAY";
+        container.style.backgroundColor = "rgba(255, 0, 0, 0.7)";
+        container.classList.remove("pulsing");
+        return;
+      }
+
+      const totalSeconds = Math.floor(diffMs / 1000);
+      const days = Math.floor(totalSeconds / (3600 * 24));
+      const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      const redIntensity = Math.min(255, Math.floor(255 * (1 - (totalSeconds / (3600 * 24 * 5)))));
+      const newBackground = `rgba(${redIntensity}, 0, 0, 0.3)`;
+
+      if (container.style.backgroundColor !== newBackground && !container.classList.contains("pulsing")) {
+        container.style.backgroundColor = newBackground;
+      }
+
+      if (totalSeconds <= 86400) {
+        container.classList.add("pulsing");
+      } else {
+        container.classList.remove("pulsing");
+      }
+    }
+
+    setInterval(updateFridayCountdown, 1000);
+    updateFridayCountdown();
   </script>
 
 </body>
