@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Overlay</title>
+  <title>Kick Stream Overlay</title>
 
-  <!-- Fonts & Icons -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/gh/corard/kick-font/kick-font.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
   <style>
     html, body {
@@ -27,17 +26,17 @@
       left: 20px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 14px;
     }
 
     .section {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .material-icons {
-      font-size: 28px;
+      font-size: 22px;
       color: white;
       text-shadow:
         0 0 6px rgba(0, 0, 0, 0.3),
@@ -46,37 +45,11 @@
     }
 
     .info-text {
-      font-size: 22px;
+      font-size: 16px;
       text-shadow:
         0 0 6px rgba(0, 0, 0, 0.3),
         0 0 8px rgba(0, 0, 0, 0.3),
         0 0 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .emoji-light {
-      font-size: 28px;
-      text-shadow:
-        0 0 2px rgba(0, 0, 0, 0.2),
-        0 0 4px rgba(0, 0, 0, 0.2),
-        0 0 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .icon-k {
-      font-size: 28px;
-      color: #53FC18;
-      font-family: 'Kick', sans-serif;
-      text-shadow:
-        0 0 4px rgba(0, 0, 0, 0.4),
-        0 0 6px rgba(0, 0, 0, 0.4);
-    }
-
-    .small-name {
-      font-size: 24px;
-      font-weight: 600;
-      font-family: 'Inter', sans-serif;
-      text-shadow:
-        0 0 4px rgba(0, 0, 0, 0.4),
-        0 0 6px rgba(0, 0, 0, 0.4);
     }
 
     .bottom-identity {
@@ -86,13 +59,27 @@
       transform: translateX(-50%);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .bottom-right-emoji {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
+    .kick-logo-img {
+      width: 22px;
+      height: auto;
+      filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.4));
+    }
+
+    .small-name {
+      font-size: 24px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      text-shadow:
+        0 0 4px rgba(0, 0, 0, 0.4),
+        0 0 6px rgba(0, 0, 0, 0.4);
+      line-height: 1;
+      position: relative;
+      top: 0;
+      display: flex;
+      align-items: center;
     }
 
     .countdown-timer {
@@ -131,8 +118,6 @@
   </style>
 </head>
 <body>
-
-  <!-- Top-left info -->
   <div class="info-overlay">
     <div class="section">
       <span class="material-icons">schedule</span>
@@ -144,18 +129,11 @@
     </div>
   </div>
 
-  <!-- Bottom-center -->
   <div class="bottom-identity">
-    <span class="icon-k">K</span>
-    <span class="small-name">lildealy</span>
+    <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/kick-streaming-platform-logo-icon.png" alt="Kick Logo" class="kick-logo-img" />
+    <div class="small-name">lildealy</div>
   </div>
 
-  <!-- Bottom-right emoji -->
-  <div class="bottom-right-emoji">
-    <span id="temp-emoji" class="emoji-light">🌡️</span>
-  </div>
-
-  <!-- Bottom-left Countdown -->
   <div id="friday-countdown" class="countdown-timer">
     <div id="countdown-label">Scavenger Hunt:</div>
     <span id="countdown-text">Loading...</span>
@@ -177,34 +155,14 @@
       try {
         const latitude = 43.651070;
         const longitude = -79.347015;
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`);
+        const data = await res.json();
 
-        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`);
-        const weather = await weatherRes.json();
-
-        const c = weather.current_weather.temperature;
+        const c = data.current_weather.temperature;
         const f = (c * 9 / 5 + 32).toFixed(1);
-        const code = weather.current_weather.weathercode;
-
-        const weatherMap = {
-          0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️",
-          51: "🌦️", 53: "🌦️", 55: "🌧️", 56: "🌧️", 57: "🌧️",
-          61: "🌦️", 63: "🌧️", 65: "🌧️", 66: "🌧️", 67: "🌧️",
-          71: "❄️", 73: "❄️", 75: "❄️", 77: "❄️", 80: "🌧️", 81: "🌧️",
-          82: "🌧️", 85: "❄️", 86: "❄️", 95: "⛈️", 96: "⛈️", 99: "⛈️"
-        };
-
-        const emoji = weatherMap[code] || "🌡️";
-        let tempNote = '';
-        if (c >= 38) tempNote = ' ☠️';
-        else if (c >= 30) tempNote = ' ⚠️';
-        else if (c <= 0) tempNote = ' 🧊';
-        else if (c <= 5) tempNote = ' ❄️';
-
-        document.getElementById('temperature').innerHTML = `${c}°C / ${f}°F`;
-        document.getElementById('temp-emoji').textContent = `${emoji}${tempNote}`;
-      } catch (err) {
-        document.getElementById('temperature').innerHTML = '--°C / --°F';
-        document.getElementById('temp-emoji').textContent = '🌡️';
+        document.getElementById('temperature').textContent = `${c}°C / ${f}°F`;
+      } catch (e) {
+        document.getElementById('temperature').textContent = '--°C / --°F';
       }
     }
 
@@ -258,6 +216,5 @@
     setInterval(updateFridayCountdown, 1000);
     updateFridayCountdown();
   </script>
-
 </body>
 </html>
