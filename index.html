@@ -2,93 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Kick Stream Overlay</title>
+  <title>overlay</title>
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/gh/corard/kick-font/kick-font.css" rel="stylesheet" />
 
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    font-family: 'Inter', sans-serif;
-    font-size: 22px;
-    font-weight: 600;
-    color: white;
-    overflow: hidden;
-  }
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: white;
+      overflow: hidden;
+    }
 
-  .info-overlay {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+    .info-overlay {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-  .section {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+    .section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-  .material-icons {
-    font-size: 22px;
-    color: white;
-    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.7));
-  }
+    .material-icons {
+      font-size: 26px;
+      color: white;
+      text-shadow:
+        0 0 6px rgba(0, 0, 0, 0.6),
+        0 0 8px rgba(0, 0, 0, 0.6),
+        0 0 10px rgba(0, 0, 0, 0.6);
+    }
 
-  .info-text {
-    font-size: 16px;
-  }
+    .info-text {
+      font-size: 20px;
+      text-shadow:
+        0 0 6px rgba(0, 0, 0, 0.3),
+        0 0 8px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(0, 0, 0, 0.3);
+    }
 
-  .strong-shadow {
-    text-shadow:
-      0 0 6px rgba(0, 0, 0, 0.5),
-      0 0 8px rgba(0, 0, 0, 0.5),
-      0 0 10px rgba(0, 0, 0, 0.5);
-  }
+    .info-text.emoji-light {
+      text-shadow:
+        0 0 2px rgba(0, 0, 0, 0.4),
+        0 0 4px rgba(0, 0, 0, 0.4);
+    }
 
-  .kick-username {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 28px;
-  }
+    .icon-k {
+      font-size: 26px;
+      color: #53FC18;
+      font-family: 'Kick', sans-serif;
+      text-shadow:
+        0 0 4px rgba(0, 0, 0, 0.4),
+        0 0 6px rgba(0, 0, 0, 0.4);
+    }
 
-  .kick-k {
-    font-family: 'Kick', sans-serif;
-    font-size: 32px;
-    color: #53FC18;
-    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6));
-  }
+    .small-name {
+      font-size: 22px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      text-shadow:
+        0 0 4px rgba(0, 0, 0, 0.4),
+        0 0 6px rgba(0, 0, 0, 0.4);
+    }
 
-  .kick-name {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    color: white;
-    text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
-  }
-
-  .weather-status {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    text-align: right;
-    font-size: 16px;
-    text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
-    color: white;
-  }
-</style>
-
+    .bottom-identity {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
 </head>
 <body>
 
@@ -96,22 +94,19 @@
   <div class="info-overlay">
     <div class="section">
       <span class="material-icons">schedule</span>
-      <span id="clock" class="info-text strong-shadow">--:-- --</span>
+      <span id="clock" class="info-text">--:-- --</span>
     </div>
     <div class="section">
       <span class="material-icons">device_thermostat</span>
-      <span id="temperature" class="info-text strong-shadow">--°C / --°F</span>
+      <span id="temperature" class="info-text">--°C / --°F</span>
     </div>
   </div>
 
-  <!-- Bottom center Kick username -->
-  <div class="kick-username">
-    <span class="kick-k">K</span>
-    <span class="kick-name">lildealy</span>
+  <!-- Bottom-center "K lildealy" -->
+  <div class="bottom-identity">
+    <span class="icon-k">K</span>
+    <span class="small-name">lildealy</span>
   </div>
-
-  <!-- Bottom-right weather status -->
-  <div class="weather-status strong-shadow" id="weather-note">Loading...</div>
 
   <script>
     function updateClock() {
@@ -136,52 +131,28 @@
 
         const c = weather.current_weather.temperature;
         const f = (c * 9 / 5 + 32).toFixed(1);
-        document.getElementById('temperature').textContent = `${c}°C / ${f}°F`;
 
         const code = weather.current_weather.weathercode;
         const weatherMap = {
-          0: ["☀️ Clear skies", "High UV exposure, risk of overheating"],
-          1: ["🌤️ Mostly clear", "Prolonged sun exposure, dehydration risk"],
-          2: ["⛅ Partly cloudy", "Glare interference, mild heat buildup"],
-          3: ["☁️ Overcast", "Low lighting, flat visibility"],
-          45: ["🌫️ Foggy", "Low visibility, dangerous navigation"],
-          48: ["🌫️ Frosty fog", "Slick surfaces, freezing risk"],
-          51: ["🌦️ Light drizzle", "Wet equipment risk, slippery ground"],
-          53: ["🌦️ Moderate drizzle", "Lens moisture buildup"],
-          55: ["🌧️ Heavy drizzle", "Consistent wetness, gear risk"],
-          56: ["🌧️ Freezing drizzle", "Ice formation, danger of slips"],
-          57: ["🌧️ Dense freezing drizzle", "Freezing on contact"],
-          61: ["🌦️ Light rain", "Moisture damage to electronics"],
-          63: ["🌧️ Moderate rain", "Impaired audio/video quality"],
-          65: ["🌧️ Heavy rain", "Flood risk, lens obstruction"],
-          66: ["🌧️ Light freezing rain", "Walking hazards"],
-          67: ["🌧️ Heavy freezing rain", "Unsafe outdoor conditions"],
-          71: ["❄️ Light snow", "Cold exposure, high probability of gear freezing"],
-          73: ["❄️ Moderate snow", "Reduced mobility, cold risk"],
-          75: ["❄️ Heavy snow", "Hypothermia risk, limited camera function"],
-          77: ["❄️ Snow grains", "Surface slickness, camera focus issues"],
-          80: ["🌧️ Light showers", "Sudden wetness, unstable filming"],
-          81: ["🌧️ Moderate showers", "Extreme risk of Equipment fogging"],
-          82: ["🌧️ Violent showers", "Extreme risk to safety"],
-          85: ["❄️ Light snow showers", "Cold disruption. Phone could freeze"],
-          86: ["❄️ Heavy snow showers", "Extreme movement restrictions"],
-          95: ["⛈️ Thunderstorm", "Lightning threat"],
-          96: ["⛈️ Thunder + light hail", "Sudden impacts. Dangerous weather"],
-          99: ["⛈️ Thunder + heavy hail", "Total gear vulnerability"]
+          0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️",
+          51: "🌦️", 53: "🌦️", 55: "🌧️", 56: "🌧️", 57: "🌧️",
+          61: "🌦️", 63: "🌧️", 65: "🌧️", 66: "🌧️", 67: "🌧️",
+          71: "❄️", 73: "❄️", 75: "❄️", 77: "❄️", 80: "🌧️", 81: "🌧️",
+          82: "🌧️", 85: "❄️", 86: "❄️", 95: "⛈️", 96: "⛈️", 99: "⛈️"
         };
 
-        const current = weatherMap[code] || ["🌡️ Unknown", "Unknown weather conditions. Exercise caution."];
-        document.getElementById('weather-note').innerHTML = `
-          <div>${current[0]}</div>
-          <div>${current[1]}</div>
-        `;
+        const emoji = weatherMap[code] || "🌡️";
 
+        let tempNote = '';
+        if (c >= 38) tempNote = ' ☠️';
+        else if (c >= 30) tempNote = ' ⚠️';
+        else if (c <= 0) tempNote = ' 🧊';
+        else if (c <= 5) tempNote = ' ❄️';
+
+        const tempText = `${c}°C / ${f}°F <span class="emoji-light">${emoji}${tempNote}</span>`;
+        document.getElementById('temperature').innerHTML = tempText;
       } catch (err) {
-        document.getElementById('temperature').textContent = '--°C / --°F';
-        document.getElementById('weather-note').innerHTML = `
-          <div>⚠️ Error</div>
-          <div>Weather data unavailable. Stay aware.</div>
-        `;
+        document.getElementById('temperature').innerHTML = '--°C / --°F <span class="emoji-light">🌡️</span>';
       }
     }
 
@@ -190,5 +161,4 @@
   </script>
 
 </body>
-
 </html>
