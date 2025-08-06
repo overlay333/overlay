@@ -7,6 +7,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
 
   <style>
     html, body {
@@ -35,7 +36,8 @@
       gap: 10px;
     }
 
-    .material-icons {
+    .material-icons,
+    .material-icons-outlined {
       font-size: 22px;
       color: white;
       text-shadow:
@@ -86,7 +88,7 @@
       position: absolute;
       bottom: 20px;
       left: 20px;
-      padding: 10px 13px;
+      padding: 11px 15px;
       border-radius: 8px;
       background-color: rgba(255, 0, 0, 0.1);
       font-size: 17px;
@@ -105,23 +107,75 @@
     #countdown-label {
       font-size: 14px;
       margin-bottom: 6px;
-      opacity: 100%;
     }
 
     #countdown-text {
       min-width: 120px;
       display: inline-block;
-      opacity: 90%;
       font-variant-numeric: tabular-nums;
     }
+
+    .pulsing {
+      animation: pulseRed 2s infinite;
+    }
+
     @keyframes pulseRed {
       0% { background-color: rgba(255, 0, 0, 0.2); }
       50% { background-color: rgba(255, 0, 0, 0.6); }
       100% { background-color: rgba(255, 0, 0, 0.2); }
     }
 
-    .pulsing {
-      animation: pulseRed 2s infinite;
+    .pulse-green {
+      animation: pulseGreen 3s infinite;
+    }
+
+    @keyframes pulseGreen {
+      0% { background-color: rgba(0, 255, 0, 0.4); }
+      50% { background-color: rgba(0, 255, 0, 0.6); }
+      100% { background-color: rgba(0, 255, 0, 0.4); }
+    }
+
+    @keyframes floatUpFade {
+      0% { transform: translate(-50%, 0) scale(0.5); opacity: 1; }
+      100% { transform: translate(-50%, -200px) scale(1); opacity: 0; }
+    }
+
+    .confetti-float {
+      animation: floatUpFade 1.5s ease-out forwards;
+    }
+
+    .countdown-badge {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-icon {
+      width: 15px;
+      height: 15px;
+      border-radius: 3px;
+      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+    }
+
+    .badge-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      text-shadow:
+        0 0 4px rgba(0, 0, 0, 0.5),
+        0 0 6px rgba(0, 0, 0, 0.5);
+    }
+
+    #confetti-img {
+      position: absolute;
+      width: 100px;
+      height: auto;
+      display: none;
+      pointer-events: none;
+      mix-blend-mode: screen;
     }
   </style>
 </head>
@@ -132,7 +186,7 @@
       <span id="clock" class="info-text">--:-- --</span>
     </div>
     <div class="section">
-      <span class="material-icons">device_thermostat</span>
+      <span class="material-icons-outlined">device_thermostat</span>
       <span id="temperature" class="info-text">--°C / --°F</span>
     </div>
   </div>
@@ -142,16 +196,26 @@
     <div class="small-name">lildealy</div>
   </div>
 
+  <div class="countdown-badge">
+    <span class="badge-text"></span>
+  </div>
+
   <div id="friday-countdown" class="countdown-timer">
     <div id="countdown-label">Scavenger Hunt:</div>
     <span id="countdown-text">Loading...</span>
   </div>
 
+  <img id="confetti-img" src="https://files.kick.com/emotes/3827242/fullsize" alt="confetti" />
+
   <script>
+    let eventStartedAt = null;
+
     function updateClock() {
       const now = new Date();
-      let h = now.getHours();
-      const m = String(now.getMinutes()).padStart(2, '0');
+      const options = { timeZone: 'America/Chicago' };
+      const local = new Date(now.toLocaleString('en-US', options));
+      let h = local.getHours();
+      const m = String(local.getMinutes()).padStart(2, '0');
       const ampm = h >= 12 ? 'PM' : 'AM';
       h = h % 12 || 12;
       document.getElementById('clock').textContent = `${h}:${m} ${ampm}`;
@@ -161,60 +225,75 @@
 
     async function fetchWeatherInfo() {
       try {
-        const latitude = 43.651070;
-        const longitude = -79.347015;
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&timezone=auto`);
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=30.2672&longitude=-97.7431&current_weather=true&timezone=auto');
         const data = await res.json();
-
         const c = data.current_weather.temperature;
         const f = (c * 9 / 5 + 32).toFixed(1);
         document.getElementById('temperature').textContent = `${c}°C / ${f}°F`;
-      } catch (e) {
+      } catch {
         document.getElementById('temperature').textContent = '--°C / --°F';
       }
     }
-
     fetchWeatherInfo();
     setInterval(fetchWeatherInfo, 600000);
 
     function updateFridayCountdown() {
-      const countdownEl = document.getElementById("countdown-text");
+      const el = document.getElementById("countdown-text");
       const container = document.getElementById("friday-countdown");
+      const confetti = document.getElementById("confetti-img");
 
-      const nowUTC = new Date();
-      const nowAustin = new Date(nowUTC.toLocaleString("en-US", { timeZone: "America/Chicago" }));
-      const currentDay = nowAustin.getDay();
+      const now = new Date();
+      const local = new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
+      const day = local.getDay();
+      const nextFriday = new Date(local);
+      const daysToFriday = (5 - day + 7) % 7 || 7;
+      nextFriday.setDate(local.getDate() + daysToFriday);
+      nextFriday.setHours(14, 0, 0, 0);
 
-      const nextFriday = new Date(nowAustin);
-      const daysUntilFriday = (5 - currentDay + 7) % 7 || 7;
-      nextFriday.setDate(nowAustin.getDate() + daysUntilFriday);
-      nextFriday.setHours(0, 0, 0, 0);
+      const diff = nextFriday - local;
 
-      const diffMs = nextFriday - nowAustin;
+      if (diff <= 0) {
+        if (!eventStartedAt) {
+          eventStartedAt = new Date(local);
+        }
 
-      if (diffMs <= 0) {
-        countdownEl.textContent = "TODAY";
-        container.style.backgroundColor = "rgba(255, 0, 0, 0.7)";
-        container.classList.remove("pulsing");
+        const elapsed = local - eventStartedAt;
+        el.textContent = "Started";
+
+        if (elapsed < 10000 ) { // 10 sec
+          container.classList.remove("pulsing");
+          container.classList.add("pulse-green");
+
+          confetti.style.left = container.offsetLeft + container.offsetWidth / 2 + 'px';
+          confetti.style.top = container.offsetTop + 'px';
+          confetti.style.display = "block";
+          confetti.classList.remove("confetti-float");
+          void confetti.offsetWidth;
+          confetti.classList.add("confetti-float");
+        } else {
+          container.classList.add("pulse-green");
+          container.classList.remove("pulsing");
+          confetti.style.display = "none";
+        }
+
         return;
       }
 
-      const totalSeconds = Math.floor(diffMs / 1000);
-      const days = Math.floor(totalSeconds / (3600 * 24));
-      const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
+      confetti.style.display = "none";
+      container.classList.remove("pulse-green");
 
-      countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      const totalSec = Math.floor(diff / 1000);
+      const d = Math.floor(totalSec / (3600 * 24));
+      const h = Math.floor((totalSec % (3600 * 24)) / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
 
-      const redIntensity = Math.min(255, Math.floor(255 * (1 - (totalSeconds / (3600 * 24 * 5)))));
-      const newBackground = `rgba(${redIntensity}, 0, 0, 0.3)`;
+      el.textContent = `${d}d ${h}h ${m}m ${s}s`;
 
-      if (container.style.backgroundColor !== newBackground && !container.classList.contains("pulsing")) {
-        container.style.backgroundColor = newBackground;
-      }
+      const red = Math.min(255, Math.floor(255 * (1 - totalSec / (3600 * 24 * 5))));
+      container.style.backgroundColor = `rgba(${red}, 0, 0, 0.3)`;
 
-      if (totalSeconds <= 86400) {
+      if (totalSec <= 43200) {
         container.classList.add("pulsing");
       } else {
         container.classList.remove("pulsing");
