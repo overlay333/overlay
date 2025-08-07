@@ -121,7 +121,7 @@
 
     @keyframes pulseRed {
       0% { background-color: rgba(255, 0, 0, 0.2); }
-      50% { background-color: rgba(255, 0, 0, 0.6); }
+      50% { background-color: rgba(255, 0, 0, 0.5); }
       100% { background-color: rgba(255, 0, 0, 0.2); }
     }
 
@@ -293,7 +293,7 @@
       const red = Math.min(255, Math.floor(255 * (1 - totalSec / (3600 * 24 * 5))));
       container.style.backgroundColor = `rgba(${red}, 0, 0, 0.3)`;
 
-      if (totalSec <= 43200) {
+      if (totalSec <= 86400) {
         container.classList.add("pulsing");
       } else {
         container.classList.remove("pulsing");
