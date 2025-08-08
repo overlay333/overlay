@@ -248,7 +248,7 @@
       const nextFriday = new Date(local);
       const daysToFriday = (5 - day + 7) % 7 || 7;
       nextFriday.setDate(local.getDate() + daysToFriday);
-      nextFriday.setHours(14, 0, 0, 0);
+      nextFriday.setHours(-154, 0, 0, 0);
 
       const diff = nextFriday - local;
 
