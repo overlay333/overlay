@@ -212,10 +212,9 @@
 
     function updateClock() {
       const now = new Date();
-      const options = { timeZone: 'America/Chicago' };
-      const local = new Date(now.toLocaleString('en-US', options));
-      let h = local.getHours();
-      const m = String(local.getMinutes()).padStart(2, '0');
+      const chicagoTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+      let h = chicagoTime.getHours();
+      const m = String(chicagoTime.getMinutes()).padStart(2, '0');
       const ampm = h >= 12 ? 'PM' : 'AM';
       h = h % 12 || 12;
       document.getElementById('clock').textContent = `${h}:${m} ${ampm}`;
@@ -243,24 +242,34 @@
       const confetti = document.getElementById("confetti-img");
 
       const now = new Date();
-      const local = new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
-      const day = local.getDay();
-      const nextFriday = new Date(local);
-      const daysToFriday = (5 - day + 7) % 7 || 7;
-      nextFriday.setDate(local.getDate() + daysToFriday);
-      nextFriday.setHours(-154, 0, 0, 0);
+      const chicagoNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
+      const day = chicagoNow.getDay();
+      const eventHour = 14; // 2:00 PM
+      let daysToFriday = (5 - day + 7) % 7;
 
-      const diff = nextFriday - local;
+      // If today is Friday, check if event time has passed
+      if (day === 5) {
+        if (chicagoNow.getHours() < eventHour) {
+          daysToFriday = 0; // event later today
+        } else {
+          daysToFriday = 7; // event already happened, go to next week
+        }
+      }
+
+      const nextFriday = new Date(chicagoNow);
+      nextFriday.setDate(chicagoNow.getDate() + daysToFriday);
+      nextFriday.setHours(eventHour, 0, 0, 0);
+
+      const diff = nextFriday - chicagoNow;
 
       if (diff <= 0) {
         if (!eventStartedAt) {
-          eventStartedAt = new Date(local);
+          eventStartedAt = new Date(chicagoNow);
         }
-
-        const elapsed = local - eventStartedAt;
+        const elapsed = chicagoNow - eventStartedAt;
         el.textContent = "Started";
 
-        if (elapsed < 10000 ) { // 10 sec
+        if (elapsed < 10000) {
           container.classList.remove("pulsing");
           container.classList.add("pulse-green");
 
@@ -275,7 +284,6 @@
           container.classList.remove("pulsing");
           confetti.style.display = "none";
         }
-
         return;
       }
 
