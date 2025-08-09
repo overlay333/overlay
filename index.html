@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>overlay</title>
 
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
@@ -83,100 +82,6 @@
       display: flex;
       align-items: center;
     }
-
-    .countdown-timer {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      padding: 11px 15px;
-      border-radius: 8px;
-      background-color: rgba(255, 0, 0, 0.1);
-      font-size: 17px;
-      font-weight: 600;
-      text-shadow:
-        0 0 4px rgba(0, 0, 0, 0.4),
-        0 0 6px rgba(0, 0, 0, 0.4);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      transition: background-color 0.5s ease;
-      font-family: 'Inter', monospace, sans-serif;
-    }
-
-    #countdown-label {
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-
-    #countdown-text {
-      min-width: 120px;
-      display: inline-block;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .pulsing {
-      animation: pulseRed 2s infinite;
-    }
-
-    @keyframes pulseRed {
-      0% { background-color: rgba(255, 0, 0, 0.4); }
-      50% { background-color: rgba(255, 0, 0, 0.6); }
-      100% { background-color: rgba(255, 0, 0, 0.4); }
-    }
-
-    .pulse-green {
-      animation: pulseGreen 3s infinite;
-    }
-
-    @keyframes pulseGreen {
-      0% { background-color: rgba(0, 255, 0, 0.4); }
-      50% { background-color: rgba(0, 255, 0, 0.6); }
-      100% { background-color: rgba(0, 255, 0, 0.4); }
-    }
-
-    @keyframes floatUpFade {
-      0% { transform: translate(-50%, 0) scale(0.5); opacity: 1; }
-      100% { transform: translate(-50%, -200px) scale(1); opacity: 0; }
-    }
-
-    .confetti-float {
-      animation: floatUpFade 1.5s ease-out forwards;
-    }
-
-    .countdown-badge {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .badge-icon {
-      width: 15px;
-      height: 15px;
-      border-radius: 3px;
-      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
-    }
-
-    .badge-text {
-      font-size: 14px;
-      font-weight: 600;
-      color: white;
-      text-shadow:
-        0 0 4px rgba(0, 0, 0, 0.5),
-        0 0 6px rgba(0, 0, 0, 0.5);
-    }
-
-    #confetti-img {
-      position: absolute;
-      width: 100px;
-      height: auto;
-      display: none;
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
   </style>
 </head>
 <body>
@@ -196,20 +101,7 @@
     <div class="small-name">lildealy</div>
   </div>
 
-  <div class="countdown-badge">
-    <span class="badge-text"></span>
-  </div>
-
-  <div id="friday-countdown" class="countdown-timer">
-    <div id="countdown-label">Scavenger Hunt:</div>
-    <span id="countdown-text">Loading...</span>
-  </div>
-
-  <img id="confetti-img" src="https://files.kick.com/emotes/3827242/fullsize" alt="confetti" />
-
   <script>
-    let eventStartedAt = null;
-
     function updateClock() {
       const now = new Date();
       const chicagoTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
@@ -235,72 +127,6 @@
     }
     fetchWeatherInfo();
     setInterval(fetchWeatherInfo, 600000);
-
-    function updateFridayCountdown() {
-      const el = document.getElementById("countdown-text");
-      const container = document.getElementById("friday-countdown");
-      const confetti = document.getElementById("confetti-img");
-
-      const now = new Date();
-      const chicagoNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
-      const day = chicagoNow.getDay();
-      const eventHour = 14; // 2:00 PM
-
-      // If it's Friday and after start time → show "Started" all day
-      if (day === 5 && chicagoNow.getHours() >= eventHour) {
-        el.textContent = "Started";
-        container.classList.add("pulse-green");
-        container.classList.remove("pulsing");
-
-        if (!eventStartedAt) eventStartedAt = new Date(chicagoNow.setHours(eventHour, 0, 0, 0));
-
-        // Show confetti for first 3 seconds
-        const elapsed = new Date() - eventStartedAt;
-        if (elapsed < 3000) {
-          confetti.style.left = container.offsetLeft + container.offsetWidth / 2 + 'px';
-          confetti.style.top = container.offsetTop + 'px';
-          confetti.style.display = "block";
-          confetti.classList.remove("confetti-float");
-          void confetti.offsetWidth;
-          confetti.classList.add("confetti-float");
-        } else {
-          confetti.style.display = "none";
-        }
-        return;
-      }
-
-      // Otherwise → countdown to next Friday
-      let daysToFriday = (5 - day + 7) % 7;
-      if (day === 5 && chicagoNow.getHours() < eventHour) daysToFriday = 0;
-
-      const nextFriday = new Date(chicagoNow);
-      nextFriday.setDate(chicagoNow.getDate() + daysToFriday);
-      nextFriday.setHours(eventHour, 0, 0, 0);
-
-      const diff = nextFriday - chicagoNow;
-      const totalSec = Math.floor(diff / 1000);
-      const d = Math.floor(totalSec / (3600 * 24));
-      const h = Math.floor((totalSec % (3600 * 24)) / 3600);
-      const m = Math.floor((totalSec % 3600) / 60);
-      const s = totalSec % 60;
-
-      el.textContent = `${d}d ${h}h ${m}m ${s}s`;
-
-      const red = Math.min(255, Math.floor(255 * (1 - totalSec / (3600 * 24 * 5))));
-      container.style.backgroundColor = `rgba(${red}, 0, 0, 0.3)`;
-
-      if (totalSec <= 86400) {
-        container.classList.add("pulsing");
-      } else {
-        container.classList.remove("pulsing");
-      }
-
-      container.classList.remove("pulse-green");
-      confetti.style.display = "none";
-    }
-
-    setInterval(updateFridayCountdown, 1000);
-    updateFridayCountdown();
   </script>
 </body>
 </html>
