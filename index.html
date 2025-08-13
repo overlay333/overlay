@@ -23,8 +23,8 @@
 
   .info-overlay {
     position: absolute;
-    top: 30px;
-    left: 30px;
+    top: 25px;
+    left: 25px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -34,11 +34,12 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    
   }
 
   .section .material-icons,
   .section .material-icons-outlined {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 400;
     color: white;
     text-shadow:
@@ -50,7 +51,7 @@
   }
 
   .info-text {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 800;
     line-height: 1.2;
     display: flex;
@@ -85,10 +86,10 @@
     letter-spacing: 1.5px;
   }
 
-  .score-box {
+.score-box {
     position: absolute;
-    bottom: 25px;
-    left: 25px;
+    top: 25px;       /* move to top */
+    right: 25px;     /* move to right */
     background: rgba(0, 0, 0, 0.7);
     border-radius: 16px;
     padding: 8px 25px;
@@ -99,8 +100,9 @@
     gap: 12px;
 
     transform: scale(0.7);
-    transform-origin: bottom left;
+    transform-origin: top right; /* anchor scaling to new position */
   }
+
   .score-row-container {
     display: flex;
     align-items: stretch;
