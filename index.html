@@ -4,9 +4,10 @@
   <meta charset="UTF-8" />
   <title>overlay</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet" />
 
   <style>
     html, body {
@@ -38,19 +39,23 @@
     .material-icons,
     .material-icons-outlined {
       font-size: 22px;
+      font-weight: 400;
       color: white;
       text-shadow:
-        0 0 6px rgba(0, 0, 0, 0.3),
-        0 0 8px rgba(0, 0, 0, 0.3),
-        0 0 10px rgba(0, 0, 0, 0.3);
+        0 0 6px rgba(0, 0, 0, 0.2),
+        0 0 8px rgba(0, 0, 0, 0.3);
     }
 
     .info-text {
-      font-size: 16px;
+      font-size: 15px;
+      font-weight: 300;
+      margin-top: 0px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
       text-shadow:
-        0 0 6px rgba(0, 0, 0, 0.3),
-        0 0 8px rgba(0, 0, 0, 0.3),
-        0 0 10px rgba(0, 0, 0, 0.3);
+        0 0 6px rgba(0, 0, 0, 0.2),
+        0 0 8px rgba(0, 0, 0, 0.3);
     }
 
     .bottom-identity {
@@ -81,6 +86,53 @@
       top: 0;
       display: flex;
       align-items: center;
+      letter-spacing: 1px;
+    }
+
+    .score-box {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      padding: 15px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      transform: scale(0.9);
+      transform-origin: top right;
+    }
+
+    .score-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .score-rank {
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.48);
+      padding: 2px 5px;
+      border-radius: 6px;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 600;
+      font-size: 14px;
+      color: #00ff22;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .score-row .material-icons {
+      font-size: 16px;
+      color: #00ff22;
     }
   </style>
 </head>
@@ -91,7 +143,7 @@
       <span id="clock" class="info-text">--:-- --</span>
     </div>
     <div class="section">
-      <span class="material-icons-outlined">device_thermostat</span>
+      <span class="material-icons-outlined" id="weather-icon">device_thermostat</span>
       <span id="temperature" class="info-text">--°C / --°F</span>
     </div>
   </div>
@@ -99,6 +151,20 @@
   <div class="bottom-identity">
     <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/kick-streaming-platform-logo-icon.png" alt="Kick Logo" class="kick-logo-img" />
     <div class="small-name">lildealy</div>
+  </div>
+
+  <div id="score-box" class="score-box">
+    <div class="score-title">
+      lildealy <span id="score-rank" class="score-rank">--</span>
+    </div>
+    <div class="score-row">
+      <span class="material-icons">qr_code_scanner</span>
+      <span>RFIDs Scanned: <span id="score-scans">--</span></span>
+    </div>
+    <div class="score-row">
+      <span class="material-icons">military_tech</span>
+      <span>Points: <span id="score-points">--</span></span>
+    </div>
   </div>
 
   <script>
@@ -114,19 +180,60 @@
     setInterval(updateClock, 1000);
     updateClock();
 
+    const weatherIconMap = {
+      0: { icon: 'wb_sunny', desc: 'Clear sky' },
+      1: { icon: 'wb_sunny', desc: 'Mostly clear' },
+      2: { icon: 'partly_cloudy_day', desc: 'Partly cloudy' },
+      3: { icon: 'cloud', desc: 'Cloudy' },
+      45: { icon: 'foggy', desc: 'Fog' },
+      48: { icon: 'foggy', desc: 'Depositing rime fog' },
+      51: { icon: 'grain', desc: 'Light drizzle' },
+      53: { icon: 'grain', desc: 'Moderate drizzle' },
+      55: { icon: 'grain', desc: 'Dense drizzle' },
+      61: { icon: 'rainy', desc: 'Slight rain' },
+      63: { icon: 'rainy', desc: 'Moderate rain' },
+      65: { icon: 'rainy', desc: 'Heavy rain' },
+      71: { icon: 'ac_unit', desc: 'Slight snow' },
+      73: { icon: 'ac_unit', desc: 'Moderate snow' },
+      75: { icon: 'ac_unit', desc: 'Heavy snow' },
+      95: { icon: 'thunderstorm', desc: 'Thunderstorm' },
+      96: { icon: 'thunderstorm', desc: 'Thunderstorm with hail' },
+      99: { icon: 'thunderstorm', desc: 'Thunderstorm with heavy hail' }
+    };
+
     async function fetchWeatherInfo() {
       try {
         const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=30.2672&longitude=-97.7431&current_weather=true&timezone=auto');
         const data = await res.json();
         const c = data.current_weather.temperature;
         const f = (c * 9 / 5 + 32).toFixed(1);
-        document.getElementById('temperature').textContent = `${c}°C / ${f}°F`;
+        const code = data.current_weather.weathercode;
+        const weatherData = weatherIconMap[code] || { icon: 'help_outline', desc: 'Unknown' };
+        document.getElementById('weather-icon').textContent = weatherData.icon;
+        document.getElementById('temperature').textContent = `${c}°C / ${f}°F • ${weatherData.desc}`;
       } catch {
-        document.getElementById('temperature').textContent = '--°C / --°F';
+        document.getElementById('weather-icon').textContent = 'error_outline';
+        document.getElementById('temperature').textContent = '--°C / --°F • N/A';
       }
     }
     fetchWeatherInfo();
     setInterval(fetchWeatherInfo, 600000);
+
+    async function fetchOverlayData() {
+      try {
+        const res = await fetch('https://api.iceposeidon.com/overlay/lildealy');
+        const data = await res.json();
+        document.getElementById('score-rank').textContent = `#${data.leaderboard_ranking ?? '--'}`;
+        document.getElementById('score-scans').textContent = data.rfids_scanned ?? '--';
+        document.getElementById('score-points').textContent = data.points ?? '--';
+      } catch {
+        document.getElementById('score-rank').textContent = '--';
+        document.getElementById('score-scans').textContent = '--';
+        document.getElementById('score-points').textContent = '--';
+      }
+    }
+    fetchOverlayData();
+    setInterval(fetchOverlayData, 6000);
   </script>
 </body>
 </html>
