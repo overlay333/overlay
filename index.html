@@ -9,132 +9,136 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet" />
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: transparent;
-      font-family: 'Inter', sans-serif;
-      font-size: 28px;
-      font-weight: 600;
-      color: white;
-      overflow: hidden;
-    }
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: white;
+    overflow: hidden;
+  }
 
-    .info-overlay {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+  .info-overlay {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 
-    .section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+  .section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-    .material-icons,
-    .material-icons-outlined {
-      font-size: 22px;
-      font-weight: 400;
-      color: white;
-      text-shadow:
-        0 0 6px rgba(0, 0, 0, 0.2),
-        0 0 8px rgba(0, 0, 0, 0.3);
-    }
+  .section .material-icons,
+  .section .material-icons-outlined {
+    font-size: 28px;
+    font-weight: 400;
+    color: white;
+    text-shadow:
+      0 0 8px rgba(0, 0, 0, 0.2),
+      0 0 10px rgba(0, 0, 0, 0.3);
+    width: 30px;        
+    text-align: center;
+    flex-shrink: 0;
+  }
 
-    .info-text {
-      font-size: 15px;
-      font-weight: 300;
-      margin-top: 0px;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      text-shadow:
-        0 0 6px rgba(0, 0, 0, 0.2),
-        0 0 8px rgba(0, 0, 0, 0.3);
-    }
+  .info-text {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    text-shadow:
+      0 0 8px rgba(0, 0, 0, 0.2),
+      0 0 10px rgba(0, 0, 0, 0.3);
+  }
 
-    .bottom-identity {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+  .bottom-identity {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
 
-    .kick-logo-img {
-      width: 22px;
-      height: auto;
-      filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.4));
-    }
+  .kick-logo-img {
+    width: 25px;
+    height: auto;
+    filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+  }
 
-    .small-name {
-      font-size: 24px;
-      font-weight: 600;
-      font-family: 'Inter', sans-serif;
-      text-shadow:
-        0 0 4px rgba(0, 0, 0, 0.4),
-        0 0 6px rgba(0, 0, 0, 0.4);
-      line-height: 1;
-      position: relative;
-      top: 0;
-      display: flex;
-      align-items: center;
-      letter-spacing: 1px;
-    }
+  .small-name {
+    font-size: 25px;
+    font-weight: 600;
+    text-shadow:
+      0 0 6px rgba(0, 0, 0, 0.5),
+      0 0 8px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1.5px;
+  }
 
-    .score-box {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 12px;
-      padding: 15px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      font-family: 'Inter', sans-serif;
-      color: white;
-      transform: scale(0.9);
-      transform-origin: top right;
-    }
+  .score-box {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 16px;
+    padding: 8px 25px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
-    .score-title {
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 1px;
-    }
+    transform: scale(0.7);
+    transform-origin: bottom left;
+  }
+  .score-row-container {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+  }
 
-    .score-rank {
-      display: inline-block;
-      background: rgba(0, 0, 0, 0.48);
-      padding: 2px 5px;
-      border-radius: 6px;
-      font-family: 'Roboto Mono', monospace;
-      font-weight: 600;
-      font-size: 14px;
-      color: #00ff22;
-    }
+  .score-rank {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 60px;
+    font-weight: 800;
+    margin-top: -3px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+  }
 
-    .score-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 500;
-    }
+  .score-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    justify-content: center;
+  }
 
-    .score-row .material-icons {
-      font-size: 16px;
-      color: #00ff22;
-    }
-  </style>
+  .score-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .score-item .material-icons {
+    margin-top: 1px;
+    font-size: 22px;
+    color: #00ff08;
+  }
+</style>
+
 </head>
 <body>
   <div class="info-overlay">
@@ -143,7 +147,7 @@
       <span id="clock" class="info-text">--:-- --</span>
     </div>
     <div class="section">
-      <span class="material-icons-outlined" id="weather-icon">device_thermostat</span>
+      <span class="material-icons">thermostat</span>
       <span id="temperature" class="info-text">--°C / --°F</span>
     </div>
   </div>
@@ -154,16 +158,18 @@
   </div>
 
   <div id="score-box" class="score-box">
-    <div class="score-title">
-      lildealy <span id="score-rank" class="score-rank">--</span>
-    </div>
-    <div class="score-row">
-      <span class="material-icons">qr_code_scanner</span>
-      <span>RFIDs Scanned: <span id="score-scans">--</span></span>
-    </div>
-    <div class="score-row">
-      <span class="material-icons">military_tech</span>
-      <span>Points: <span id="score-points">--</span></span>
+    <div class="score-row-container">
+      <div id="score-rank" class="score-rank">#--</div>
+      <div class="score-details">
+        <div class="score-item">
+          <span class="material-icons">qr_code_scanner</span>
+          RFIDs: <span id="score-scans">--</span>
+        </div>
+        <div class="score-item">
+          <span class="material-icons">star</span>
+          Points: <span id="score-points">--</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -180,40 +186,15 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    const weatherIconMap = {
-      0: { icon: 'wb_sunny', desc: 'Clear sky' },
-      1: { icon: 'wb_sunny', desc: 'Mostly clear' },
-      2: { icon: 'partly_cloudy_day', desc: 'Partly cloudy' },
-      3: { icon: 'cloud', desc: 'Cloudy' },
-      45: { icon: 'foggy', desc: 'Fog' },
-      48: { icon: 'foggy', desc: 'Depositing rime fog' },
-      51: { icon: 'grain', desc: 'Light drizzle' },
-      53: { icon: 'grain', desc: 'Moderate drizzle' },
-      55: { icon: 'grain', desc: 'Dense drizzle' },
-      61: { icon: 'rainy', desc: 'Slight rain' },
-      63: { icon: 'rainy', desc: 'Moderate rain' },
-      65: { icon: 'rainy', desc: 'Heavy rain' },
-      71: { icon: 'ac_unit', desc: 'Slight snow' },
-      73: { icon: 'ac_unit', desc: 'Moderate snow' },
-      75: { icon: 'ac_unit', desc: 'Heavy snow' },
-      95: { icon: 'thunderstorm', desc: 'Thunderstorm' },
-      96: { icon: 'thunderstorm', desc: 'Thunderstorm with hail' },
-      99: { icon: 'thunderstorm', desc: 'Thunderstorm with heavy hail' }
-    };
-
     async function fetchWeatherInfo() {
       try {
         const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=30.2672&longitude=-97.7431&current_weather=true&timezone=auto');
         const data = await res.json();
         const c = data.current_weather.temperature;
         const f = (c * 9 / 5 + 32).toFixed(1);
-        const code = data.current_weather.weathercode;
-        const weatherData = weatherIconMap[code] || { icon: 'help_outline', desc: 'Unknown' };
-        document.getElementById('weather-icon').textContent = weatherData.icon;
-        document.getElementById('temperature').textContent = `${c}°C / ${f}°F • ${weatherData.desc}`;
+        document.getElementById('temperature').textContent = `${c}°C / ${f}°F`;
       } catch {
-        document.getElementById('weather-icon').textContent = 'error_outline';
-        document.getElementById('temperature').textContent = '--°C / --°F • N/A';
+        document.getElementById('temperature').textContent = '--°C / --°F';
       }
     }
     fetchWeatherInfo();
@@ -227,7 +208,7 @@
         document.getElementById('score-scans').textContent = data.rfids_scanned ?? '--';
         document.getElementById('score-points').textContent = data.points ?? '--';
       } catch {
-        document.getElementById('score-rank').textContent = '--';
+        document.getElementById('score-rank').textContent = '#--';
         document.getElementById('score-scans').textContent = '--';
         document.getElementById('score-points').textContent = '--';
       }
