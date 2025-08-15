@@ -23,84 +23,83 @@
 
   .info-overlay {
     position: absolute;
-    top: 25px;
-    left: 25px;
+    top: 20px;
+    left: 15px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
   }
 
   .section {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 3px;
     
   }
 
   .section .material-icons,
   .section .material-icons-outlined {
-    font-size: 24px;
+    font-size: 19px;
     font-weight: 400;
     color: white;
     text-shadow:
-      0 0 8px rgba(0, 0, 0, 0.2),
-      0 0 10px rgba(0, 0, 0, 0.3);
+      1px 1px 2px rgba(0, 0, 0, 0.253);
     width: 30px;        
     text-align: center;
     flex-shrink: 0;
   }
 
   .info-text {
-    font-size: 16px;
-    font-weight: 800;
+    font-size: 15px;
+    font-weight: 400;
     line-height: 1.2;
+    margin-top: -1px;
     display: flex;
     align-items: center;
     text-shadow:
-      0 0 8px rgba(0, 0, 0, 0.2),
-      0 0 10px rgba(0, 0, 0, 0.3);
+      1px 1px 2px rgba(0, 0, 0, 0.445);
   }
 
   .bottom-identity {
     position: absolute;
-    bottom: 20px;
+    bottom: 13px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%); 
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
 
   .kick-logo-img {
-    width: 25px;
+    margin-top: 0px;
+    width: 19px;
     height: auto;
-    filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.377));
   }
 
   .small-name {
-    font-size: 25px;
+    font-size: 19px;
     font-weight: 600;
     text-shadow:
-      0 0 6px rgba(0, 0, 0, 0.5),
-      0 0 8px rgba(0, 0, 0, 0.5);
-    letter-spacing: 1.5px;
+      1px 1px 2px rgba(0, 0, 0, 0.445);
+    letter-spacing: 1px;
   }
 
 .score-box {
     position: absolute;
-    top: 25px;       /* move to top */
-    right: 25px;     /* move to right */
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 16px;
-    padding: 8px 25px;
-    color: white;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.808);
+    border-radius: 10px;
+    padding: 6px 22px;
+    color: white; 
     font-family: 'Inter', sans-serif;
     display: flex;
     flex-direction: column;
     gap: 12px;
 
-    transform: scale(0.65);
-    transform-origin: top right; /* anchor scaling to new position */
+    transform: scale(0.6);
+    transform-origin: top right;
   }
 
   .score-row-container {
@@ -122,10 +121,11 @@
   .score-details {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    font-size: 18px;
-    font-weight: 600;
+    gap: 5px;
+    font-size: 19px;
+    font-weight: 800;
     justify-content: center;
+    margin-left: -9px;
   }
 
   .score-item {
