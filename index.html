@@ -34,7 +34,6 @@
     display: flex;
     align-items: center;
     gap: 3px;
-    
   }
 
   .section .material-icons,
@@ -84,61 +83,6 @@
       1px 1px 2px rgba(0, 0, 0, 0.445);
     letter-spacing: 1px;
   }
-
-.score-box {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(0, 0, 0, 0.808);
-    border-radius: 10px;
-    padding: 6px 22px;
-    color: white; 
-    font-family: 'Inter', sans-serif;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    transform: scale(0.6);
-    transform-origin: top right;
-  }
-
-  .score-row-container {
-    display: flex;
-    align-items: stretch;
-    gap: 16px;
-  }
-
-  .score-rank {
-    font-family: 'Roboto Mono', monospace;
-    font-size: 60px;
-    font-weight: 800;
-    margin-top: -3px;
-    display: flex;
-    align-items: center;
-    color: #fff;
-  }
-
-  .score-details {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    font-size: 19px;
-    font-weight: 800;
-    justify-content: center;
-    margin-left: -9px;
-  }
-
-  .score-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .score-item .material-icons {
-    margin-top: 1px;
-    font-size: 22px;
-    color: #00ff08;
-  }
 </style>
 
 </head>
@@ -157,22 +101,6 @@
   <div class="bottom-identity">
     <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/kick-streaming-platform-logo-icon.png" alt="Kick Logo" class="kick-logo-img" />
     <div class="small-name">lildealy</div>
-  </div>
-
-  <div id="score-box" class="score-box">
-    <div class="score-row-container">
-      <div id="score-rank" class="score-rank">#--</div>
-      <div class="score-details">
-        <div class="score-item">
-          <span class="material-icons">qr_code_scanner</span>
-          RFIDs: <span id="score-scans">--</span>
-        </div>
-        <div class="score-item">
-          <span class="material-icons">star</span>
-          Points: <span id="score-points">--</span>
-        </div>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -201,23 +129,6 @@
     }
     fetchWeatherInfo();
     setInterval(fetchWeatherInfo, 600000);
-
-    async function fetchOverlayData() {
-      try {
-        const res = await fetch('https://api.iceposeidon.com/overlay/lildealy');
-        const data = await res.json();
-        document.getElementById('score-rank').textContent = `#${data.leaderboard_ranking ?? '--'}`;
-        document.getElementById('score-scans').textContent = data.rfids_scanned ?? '--';
-        document.getElementById('score-points').textContent = data.points ?? '--';
-      } catch {
-        document.getElementById('score-rank').textContent = '#--';
-        document.getElementById('score-scans').textContent = '--';
-        document.getElementById('score-points').textContent = '--';
-      }
-    }
-    fetchOverlayData();
-    setInterval(fetchOverlayData, 6000);
   </script>
 </body>
 </html>
-
