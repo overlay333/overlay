@@ -106,9 +106,9 @@
   <script>
     function updateClock() {
       const now = new Date();
-      const chicagoTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
-      let h = chicagoTime.getHours();
-      const m = String(chicagoTime.getMinutes()).padStart(2, '0');
+      const detroitTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Detroit' }));
+      let h = detroitTime.getHours();
+      const m = String(detroitTime.getMinutes()).padStart(2, '0');
       const ampm = h >= 12 ? 'PM' : 'AM';
       h = h % 12 || 12;
       document.getElementById('clock').textContent = `${h}:${m} ${ampm}`;
@@ -118,7 +118,7 @@
 
     async function fetchWeatherInfo() {
       try {
-        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=30.2672&longitude=-97.7431&current_weather=true&timezone=auto');
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=42.3314&longitude=-83.0458&current_weather=true&timezone=auto');
         const data = await res.json();
         const c = data.current_weather.temperature;
         const f = (c * 9 / 5 + 32).toFixed(1);
