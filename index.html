@@ -103,32 +103,38 @@
     <div class="small-name">lildealy</div>
   </div>
 
-  <script>
-    function updateClock() {
-      const now = new Date();
-      const detroitTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Detroit' }));
-      let h = detroitTime.getHours();
-      const m = String(detroitTime.getMinutes()).padStart(2, '0');
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      h = h % 12 || 12;
-      document.getElementById('clock').textContent = `${h}:${m} ${ampm}`;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+<script>
+  function updateClock() {
+    const now = new Date();
+    const tampaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    let h = tampaTime.getHours();
+    const m = String(tampaTime.getMinutes()).padStart(2, '0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    document.getElementById('clock').textContent = `${h}:${m} ${ampm}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
 
-    async function fetchWeatherInfo() {
-      try {
-        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=42.3314&longitude=-83.0458&current_weather=true&timezone=auto');
-        const data = await res.json();
-        const c = data.current_weather.temperature;
-        const f = (c * 9 / 5 + 32).toFixed(1);
-        document.getElementById('temperature').textContent = `${c}°C / ${f}°F`;
-      } catch {
-        document.getElementById('temperature').textContent = '--°C / --°F';
-      }
+  async function fetchWeatherInfo() {
+    try {
+      const res = await fetch(
+        "https://api.open-meteo.com/v1/forecast?latitude=27.9506&longitude=-82.4572&current_weather=true&timezone=America/New_York"
+      );
+      const data = await res.json();
+      
+      const c = data.current_weather.temperature;
+      const f = (c * 9 / 5 + 32).toFixed(1);
+
+      document.getElementById("temperature").textContent = `${c}°C / ${f}°F`;
+    } catch (err) {
+      console.error(err);
+      document.getElementById("temperature").textContent = "--°C / --°F";
     }
-    fetchWeatherInfo();
-    setInterval(fetchWeatherInfo, 600000);
-  </script>
+  }
+
+  fetchWeatherInfo();
+  setInterval(fetchWeatherInfo, 600000);
+</script>
 </body>
 </html>
