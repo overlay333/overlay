@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>overlay</title>
+  <title></title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -19,44 +19,6 @@
     font-weight: 600;
     color: white;
     overflow: hidden;
-  }
-
-  .info-overlay {
-    position: absolute;
-    top: 20px;
-    left: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .section {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-  }
-
-  .section .material-icons,
-  .section .material-icons-outlined {
-    font-size: 19px;
-    font-weight: 400;
-    color: white;
-    text-shadow:
-      1px 1px 2px rgba(0, 0, 0, 0.253);
-    width: 30px;        
-    text-align: center;
-    flex-shrink: 0;
-  }
-
-  .info-text {
-    font-size: 15px;
-    font-weight: 400;
-    line-height: 1.2;
-    margin-top: 0px;
-    display: flex;
-    align-items: center;
-    text-shadow:
-      1px 1px 2px rgba(0, 0, 0, 0.445);
   }
 
   .bottom-identity {
@@ -84,57 +46,13 @@
     letter-spacing: 1px;
   }
 </style>
-
 </head>
-<body>
-  <div class="info-overlay">
-    <div class="section">
-      <span class="material-icons">schedule</span>
-      <span id="clock" class="info-text">--:-- --</span>
-    </div>
-    <div class="section">
-      <span class="material-icons">thermostat</span>
-      <span id="temperature" class="info-text">--°C / --°F</span>
-    </div>
-  </div>
 
+<body>
   <div class="bottom-identity">
     <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/kick-streaming-platform-logo-icon.png" alt="Kick Logo" class="kick-logo-img" />
     <div class="small-name">lildealy</div>
   </div>
-
-<script>
-  function updateClock() {
-    const now = new Date();
-    const tampaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-    let h = tampaTime.getHours();
-    const m = String(tampaTime.getMinutes()).padStart(2, '0');
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    h = h % 12 || 12;
-    document.getElementById('clock').textContent = `${h}:${m} ${ampm}`;
-  }
-  setInterval(updateClock, 1000);
-  updateClock();
-
-  async function fetchWeatherInfo() {
-    try {
-      const res = await fetch(
-        "https://api.open-meteo.com/v1/forecast?latitude=27.9506&longitude=-82.4572&current_weather=true&timezone=America/New_York"
-      );
-      const data = await res.json();
-      
-      const c = data.current_weather.temperature;
-      const f = (c * 9 / 5 + 32).toFixed(1);
-
-      document.getElementById("temperature").textContent = `${c}°C / ${f}°F`;
-    } catch (err) {
-      console.error(err);
-      document.getElementById("temperature").textContent = "--°C / --°F";
-    }
-  }
-
-  fetchWeatherInfo();
-  setInterval(fetchWeatherInfo, 600000);
-</script>
 </body>
+
 </html>
